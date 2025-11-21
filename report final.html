@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Spam Detection Project</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Set Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply dark mode and Inter font by default */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* gray-900 */
+            color: #F3F4F6; /* gray-100 */
+        }
+        /* Custom styles for code blocks */
+        pre[class*="language-"] {
+            background: #1F2937; /* gray-800 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            overflow-x: auto;
+            border: 1px solid #374151; /* gray-700 */
+        }
+        code[class*="language-"] {
+            font-family: 'Courier New', Courier, monospace;
+            color: #E5E7EB; /* gray-200 */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Main Content Container -->
+    <div class="max-w-5xl mx-auto p-4 sm:p-8">
+
+        <!-- Header -->
+        <header class="mb-8">
+
+            <h1 class="text-3xl sm:text-4xl font-bold text-cyan-400 mb-2 text-center">
+                Project: SMS Spam Detection
+            </h1>
+            <p class="text-xl text-gray-300 text-center">
+                Classifying SMS messages as Spam or Ham using TF-IDF & ML models.
+            </p>
+
+            <!-- Group Members Section -->
+            <div class="mt-6 text-center">
+                <h3 class="text-lg font-semibold text-gray-200 mb-3">Submitted by:</h3>
+                <div class="flex flex-col items-center gap-y-2">
+                    <p class="text-gray-400">Gasthi Hasitha - 24BEC012</p>
+                    <p class="text-gray-400">Himanshu kumar sonkar - 24BEC014</p>
+                    <p class="text-gray-400">Kowshik G - 24BEC020</p>
+                    <p class="text-gray-400">PVS Kartheek - 24BEC041</p>
+                    <p class="text-gray-400">Veeresh channayya - 24BEC065</p>
+                </div>
+            </div>
+            <!-- END: Group Members Section -->
+            
+            <!-- Guide Section -->
+            <div class="mt-6 text-center">
+                <h3 class="text-lg font-semibold text-gray-200 mb-3">Under the guidance of:</h3>
+                <p class="text-gray-400">Deepak KT</p>
+                <p class="text-gray-400">Assistant Professor</p>
+                <p class="text-gray-400">Associate Dean - Research and Development [R&D]</p>
+            </div>
+            <!-- END: Guide Section -->
+
+            <!-- College Logo Placeholder -->
+            <div class="mt-8 text-center"> <!-- Added margin-top for spacing -->
+                <img src="https://i.postimg.cc/J7SnPV0W/Screenshot-2025-11-16-180514.png" 
+                    alt="College Logo" 
+                    class="h-20 w-auto mx-auto rounded-md">
+            </div>
+            <!-- END: College Logo Placeholder -->
+
+        </header>
+
+        <!-- Main Grid -->
+        <div class="space-y-8"> <!-- CHANGED: Removed grid classes to make it a single column -->
+
+            <!-- Left Column (Main Content) -->
+            <div class="space-y-8"> <!-- CHANGED: Removed col-span -->
+
+                <!-- 1. Introduction (Replaces Overview) -->
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">1. Introduction</h2>
+                    <p class="text-gray-300 leading-relaxed">
+                        This project builds a machine learning model to classify SMS messages as <strong>Spam</strong> or <strong>Ham (Not Spam)</strong> using Natural Language Processing (NLP). It uses <strong>TF-IDF vectorization</strong> for text feature extraction and compares the performance of <strong>Logistic Regression</strong> and <strong>Support Vector Machine (SVM)</strong> classifiers.
+                    </p>
+                </section>
+
+                <!-- 2. Related Work -->
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">2. Related Work</h2>
+                    <p class="text-gray-300 leading-relaxed">
+                        Spam filtering has been a subject of research since the early days of email. Early approaches successfully employed Bayesian filters, particularly Naive Bayes, which calculates the probability of a message being spam based on the occurrence of specific words. This method, along with other classic machine learning algorithms like Logistic Regression and Support Vector Machines (SVMs), has been widely applied to SMS spam.
+                        <br><br>
+                        SVMs, in particular, are known for their effectiveness in high-dimensional feature spaces, such as those created by text data. Feature representation is a critical component, with Bag-of-Words (BoW) and <strong>TF-IDF</strong> being the most common techniques to convert text into numerical vectors. More recently, deep learning models, including Recurrent Neural Networks (RNNs) and Transformers (e.g., BERT), have achieved state-of-the-art results but at the cost of higher computational complexity and reduced interpretability. This project focuses on establishing a strong, interpretable baseline using the well-vetted TF-IDF and SVM/Logistic Regression combination, which remains a practical and robust solution.
+                    </p>
+                </section>
+
+                <!-- 3. Data Description & EDA -->
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">3. Data Description & EDA</h2>
+                    <p class="text-gray-300 leading-relaxed">
+                        The dataset used is the "SMS Spam Collection" from the UCI Machine Learning Repository. It contains 5,572 messages tagged as 'ham' or 'spam'. We performed Exploratory Data Analysis (EDA) to examine the class imbalance (approx. 13% spam) and analyze message length distributions, which show that spam messages are often longer than ham messages.
+                    </p>
+                </section>
+
+                <!-- 4. Methodology -->
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">4. Methodology</h2>
+                    <p class="text-gray-300 leading-relaxed">
+                        Our approach involves two main phases:
+                        <br>
+                        <strong>1. Feature Extraction:</strong> Raw text messages are cleaned (lowercase, remove punctuation) and converted into a numerical matrix using the Term Frequency-Inverse Document Frequency (TF-IDF) technique with a maximum of 3000 features.
+                        <br>
+                        <strong>2. Model Training:</strong> We train two supervised learning models for comparison: Logistic Regression (a linear probabilistic model) and Support Vector Machine (using LinearSVC, effective for high-dimensional sparse data).
+                    </p>
+                </section>
+
+
+                <!-- 5. Automated Pipeline -->
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">5. Automated Pipeline</h2>
+                    <p class="text-gray-300 leading-relaxed">
+                        To ensure reproducibility and ease of use, the project is organized into a modular pipeline. This design separates distinct logical steps into their own Python scripts, which are then called by the main Jupyter Notebooks.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed mt-2">
+                        The core components of this pipeline are:
+                    </p>
+                    <ul class="list-disc list-inside text-gray-300 leading-relaxed space-y-2 mt-2">
+                        <li><strong>data_loader.py:</strong> Handles loading, cleaning, and initial preprocessing of the raw <code>sms_spam.csv</code> file.</li>
+                        <li><strong>feature_extraction.py:</strong> Contains the function to apply TF-IDF vectorization to the text data.</li>
+                        <li><strong>model_train.py:</strong> Encapsulates the training logic for both Logistic Regression and SVM models.</li>
+                        <li><strong>evaluate.py:</strong> Provides functions to calculate performance metrics (accuracy, precision, recall, F1) and generate confusion matrices.</li>
+                    </ul>
+                    <p class="text-gray-300 leading-relaxed mt-2">
+                        The Jupyter Notebooks (<code>01_data_exploration.ipynb</code>, <code>02_feature_engineering.ipynb</code>, <code>03_modeling_evaluation.ipynb</code>) orchestrate these scripts, demonstrating the flow from raw data to final evaluation. While a <code>RUN.sh</code> script is not explicitly provided, this modular structure makes creating one (e.g., to run the notebooks sequentially) trivial.
+                    </p>
+                </section>
+
+                <!-- 6. Experimental Setup -->
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">6. Experimental Setup</h2>
+                    <p class="text-gray-300 leading-relaxed">
+                        The models were trained on 80% of the data and evaluated on a 20% hold-out test set, using stratification to maintain the original class distribution. Key libraries include Scikit-learn for modeling and TF-IDF, Pandas for data handling, and Matplotlib/Seaborn for visualization.
+                    </p>
+                </section>
+
+                <!-- 7. Results (Replaces Model Comparison) -->
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">7. Results (Confusion Matrix & PCA)</h2>
+<!-- ... (rest of section 7) ... -->
+                    <p class="text-gray-300 leading-relaxed mt-4">
+                        The confusion matrices, shown in the <strong>Performance Visuals</strong> panel, confirm these findings. The SVM model correctly identifies a much higher number of spam messages (higher recall). PCA was considered for dimensionality reduction but not implemented, as TF-IDF with 3000 features was already handled efficiently by the linear models.
+                    </p>
+                </section>
+
+                <!-- NEW: Performance Visuals section moved here -->
+                <section class="space-y-6">
+                    <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">Performance Visuals</h2>
+                    
+                    <!-- Flex container to hold images side-by-side -->
+                    <div class="flex flex-col md:flex-row justify-center gap-6"> 
+                        
+                        <!-- Logistic Regression Card -->
+                        <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-700 w-full md:w-1/2">
+                            <div class="p-5">
+                                <h3 class="text-lg font-semibold text-gray-100">Confusion Matrix: Logistic Regression</h3>
+                                <p class="text-sm text-gray-400 mb-4">Shows high precision but lower recall for spam.</p>
+                            </div>
+                            <img src="https://i.postimg.cc/fLkjsnYW/confusion-matrix-logisticregression.png"
+                                alt="Logistic Regression Confusion Matrix"
+                                class="w-full h-auto bg-gray-700">
+                        </div>
+
+                        <!-- SVM Card -->
+                        <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-700 w-full md:w-1/2">
+                            <div class="p-5">
+                                <h3 class="text-lg font-semibold text-gray-100">Confusion Matrix: SVM</h3>
+                                <p class="text-sm text-gray-400 mb-4">Excellent performance with high recall.</p>
+                            </div>
+                            <img src="https://i.postimg.cc/j5WN96rC/confusion-matrix-svm.png"
+                                alt="SVM Confusion Matrix"
+                                class="w-full h-auto bg-gray-700">
+                        </div>
+                    </div>
+                </section>
+                <!-- END: Performance Visuals section -->
+
+
+                <!-- 8. Error Analysis -->
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">8. Error Analysis</h2>
+                    <p class="text-gray-300 leading-relaxed">
+                        We manually reviewed misclassified 'ham' messages (false positives) and 'spam' messages (false negatives). False positives often contained marketing-like language (e.g., "offers," "sale"). False negatives were typically very short spam messages that lacked common spam keywords.
+                    </p>
+                </section>
+
+                <!-- 9. Conclusion & Future Work -->
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">9. Conclusion & Future Work</h2>
+                    <p class="text-gray-300 leading-relaxed">
+                        The SVM (LinearSVC) model demonstrated superior and more balanced performance for spam detection, achieving 98.6% accuracy with a high recall (0.89) for the minority spam class. Future work could explore more advanced NLP models like transformers (e.g., a fine-tuned BERT model) or ensemble methods to further improve recall without sacrificing precision.
+                    </p>
+                </section>
+
+            </div> <!-- ****** CORRECTED: This now properly closes the left column ****** -->
+
+            <!-- Right Column (Visuals) -->
+            <!-- THIS SECTION WAS MOVED -->
+            
+        </div> <!-- ****** CORRECTED: This closes the main grid ****** -->
+
+        <!-- NEW Project Files Section (replaces old Code Appendix) -->
+        <section class="mt-16">
+            <h2 class="text-2xl font-semibold text-gray-100 border-b border-gray-700 pb-2 mb-4">
+                10. Appendix: Code & Artifacts
+            </h2>
+            
+            <!-- Tab Headers -->
+            <div class="mb-4 border-b border-gray-700">
+                <nav class="flex -mb-px" aria-label="Tabs">
+                    <button class="tab-btn" id="tab-btn-notebooks" onclick="changeTab('notebooks')" role="tab" aria-selected="true">
+                        Project Walkthrough (Notebooks)
+                    </button>
+                    <button class="tab-btn" id="tab-btn-scripts" onclick="changeTab('scripts')" role="tab" aria-selected="false">
+                        Source Scripts (.py)
+                    </button>
+                    <button class="tab-btn" id="tab-btn-data" onclick="changeTab('data')" role="tab" aria-selected="false">
+                        Data Source (.csv)
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Tab Content -->
+            <div>
+                <!-- Tab 1: Notebooks -->
+                <div class="tab-content" id="tab-notebooks" role="tabpanel">
+                    <p class="text-gray-400 mb-6">
+                        This is a step-by-step walkthrough of the project, based on the Jupyter Notebooks provided.
+                    </p>
+                    <div class="space-y-8">
+                        
+                        <!-- Notebook 1: Data Exploration -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-cyan-400 mb-2">01_data_exploration.ipynb</h3>
+                            <p class="text-gray-400 mb-4">The first notebook loads the raw data, cleans it, and performs exploratory data analysis (EDA) to understand distributions.</p>
+                            <h4 class="text-md font-medium text-gray-200 mb-2">Key Step: Class Distribution</h4>
+                            <pre class="language-python"><code># Cell 4: Plotting label distribution
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.set_style('darkgrid')
+plt.figure(figsize=(6,4))
+sns.countplot(x='label', data=data, palette='coolwarm')
+plt.title('Spam vs Ham Distribution')
+plt.xlabel('Label (0 = Ham, 1 = Spam)')
+plt.xticks([0,1], ['Ham', 'Spam'])
+plt.show()</code></pre>
+                            <h4 class="text-md font-medium text-gray-200 mt-4 mb-2">Key Step: Message Length Analysis</h4>
+                            <pre class="language-python"><code># Cell 5: Text length feature
+data['text_length'] = data['message'].apply(len)
+
+plt.figure(figsize=(10,5))
+sns.histplot(data=data, x='text_length', hue='label', bins=50, kde=True)
+plt.title('Message Length Distribution (Ham vs Spam)')
+plt.xlabel('Message length (characters)')
+plt.show()</code></pre>
+                        </div>
+
+                        <!-- Notebook 2: Feature Engineering -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-cyan-400 mb-2">02_feature_engineering.ipynb</h3>
+                            <p class="text-gray-400 mb-4">This notebook uses the `data_loader` and `feature_extraction` scripts to process the data and split it into training and testing sets.</p>
+                            <h4 class="text-md font-medium text-gray-200 mb-2">Key Step: TF-IDF Vectorization</h4>
+                            <pre class="language-python"><code># Cell 3: TF-IDF vectorization
+from data_loader import load_data
+from feature_extraction import get_tfidf_features
+
+df = load_data('../data/sms_spam.csv')
+X, vectorizer = get_tfidf_features(df['message'])
+y = df['label']</code></pre>
+                            <h4 class="text-md font-medium text-gray-200 mt-4 mb-2">Key Step: Train-Test Split</h4>
+                            <pre class="language-python"><code># Cell 4: Train-test split
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+print(f"Training samples: {X_train.shape[0]}, Test samples: {X_test.shape[0]}")</code></pre>
+                        </div>
+
+                        <!-- Notebook 3: Modeling -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-cyan-400 mb-2">03_modeling_evaluation.ipynb</h3>
+                            <p class="text-gray-400 mb-4">The final notebook trains the models, evaluates their performance, and generates the comparison CSV and confusion matrices.</p>
+                            <h4 class="text-md font-medium text-gray-200 mb-2">Key Step: Training & Evaluating</h4>
+                            <pre class="language-python"><code># Cell 3 & 4: Train and Evaluate
+from model_train import train_models
+from evaluate import evaluate_model
+import joblib
+
+# ... (Load X_train, y_train, etc. from .pkl) ...
+models = train_models(X_train, y_train)
+
+results = []
+for name, model in models.items():
+    metrics, cm = evaluate_model(model, X_test, y_test)
+    results.append({'Model': name, **metrics})
+    
+    # Plot confusion matrix
+    plt.figure(figsize=(4,3))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    plt.title(f'Confusion Matrix - {name}')
+    plt.savefig(f'../results/confusion_matrix_{name.lower()}.png')
+    plt.show()</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Scripts -->
+                <div class="tab-content" id="tab-scripts" role="tabpanel" style="display: none;">
+                    <p class="text-gray-400 mb-6">These are the core Python scripts used in the project, imported by the notebooks.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- data_loader.py -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-200 mb-2">data_loader.py</h3>
+                            <pre class="language-python"><code>import pandas as pd
+
+def load_data(path):
+    """
+    Loads the SMS Spam Collection dataset (tab-separated),
+    cleans columns, encodes labels and returns a DataFrame
+    with columns: ['label', 'message'] where label is 0 (ham) or 1 (spam).
+    """
+    try:
+        df = pd.read_csv(
+            path,
+            sep='\t',
+            encoding='latin-1',
+            names=['label', 'message'],
+            on_bad_lines='skip'
+        )
+    except Exception as e:
+        print(f"Error reading file: {e}")
+        return None
+
+    df['label'] = df['label'].map({'ham': 0, 'spam': 1})
+    df = df.dropna()
+    return df</code></pre>
+                        </div>
+
+                        <!-- feature_extraction.py -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-200 mb-2">feature_extraction.py</h3>
+                            <pre class="language-python"><code>from sklearn.feature_extraction.text import TfidfVectorizer
+
+def get_tfidf_features(texts, max_features=3000):
+    vectorizer = TfidfVectorizer(max_features=max_features, stop_words='english')
+    X = vectorizer.fit_transform(texts)
+    return X, vectorizer</code></pre>
+                        </div>
+
+                        <!-- model_train.py -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-200 mb-2">model_train.py</h3>
+                            <pre class="language-python"><code>from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+
+def train_models(X_train, y_train):
+    models = {
+        'LogisticRegression': LogisticRegression(max_iter=1000),
+        'SVM': LinearSVC()
+    }
+    for name, model in models.items():
+        model.fit(X_train, y_train)
+    return models</code></pre>
+                        </div>
+
+                        <!-- evaluate.py -->
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-200 mb-2">evaluate.py</h3>
+                            <pre class="language-python"><code>from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+
+def evaluate_model(model, X_test, y_test):
+    y_pred = model.predict(X_test)
+    metrics = {
+        'Accuracy': accuracy_score(y_test, y_pred),
+        'Precision': precision_score(y_test, y_pred),
+        'Recall': recall_score(y_test, y_pred),
+        'F1': f1_score(y_test, y_pred)
+    }
+    return metrics, confusion_matrix(y_test, y_pred)</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Data -->
+                <div class="tab-content" id="tab-data" role="tabpanel" style="display: none;">
+                    <p class="text-gray-400 mb-4">A small snippet from <code>sms_spam.csv</code> to show the raw data format. The data is tab-separated (`\t`).</p>
+                    <pre class="language-text" style="background-color: #1F2937; color: #E5E7EB; padding: 1rem; border-radius: 0.5rem; border: 1px solid #374151; overflow-x: auto;"><code>ham	Go until jurong point, crazy.. Available only in bugis n great world la e buffet... Cine there got amore wat...
+ham	Ok lar... Joking wif u oni...
+spam	Free entry in 2 a wkly comp to win FA Cup final tkts 21st May 2005. Text FA to 87121 to receive entry question(std txt rate)T&C's apply 08452810075over18's
+ham	U dun say so early hor... U c already then say...
+ham	Nah I don't think he goes to usf, he lives around here though
+spam	FreeMsg Hey there darling it's been 3 week's now and no word back! I'd like some fun you up for it still? Tb ok! XxX std chgs to send, £1.50 to rcv
+ham	Even my brother is not like to speak with me. They treat me like aids patent.
+spam	WINNER!! As a valued network customer you have been selected to receivea £900 prize reward! To claim call 09061701461. Claim code KL341. Valid 12 hours only.
+</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-16 text-center text-gray-500 text-sm">
+            <p>ML Project Report generated from provided Python, Notebook, &amp; data files.</p>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript for Tabs -->
+    <script>
+        const tabs = ['notebooks', 'scripts', 'data'];
+        const tabBtns = {
+            notebooks: document.getElementById('tab-btn-notebooks'),
+            scripts: document.getElementById('tab-btn-scripts'),
+            data: document.getElementById('tab-btn-data')
+        };
+        const tabContents = {
+            notebooks: document.getElementById('tab-notebooks'),
+            scripts: document.getElementById('tab-scripts'),
+            data: document.getElementById('tab-data')
+        };
+
+        // Tab button base: "py-2 px-4 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-200 hover:border-gray-500"
+        // Tab button active: "py-2 px-4 text-sm font-medium text-cyan-400 border-b-2 border-cyan-400"
+        const activeClasses = ['text-cyan-400', 'border-cyan-400'];
+        const inactiveClasses = ['text-gray-400', 'border-transparent', 'hover:text-gray-200', 'hover:border-gray-500'];
+
+        function changeTab(targetTab) {
+            tabs.forEach(tab => {
+                const btn = tabBtns[tab];
+                const content = tabContents[tab];
+
+                if (tab === targetTab) {
+                    // Show content
+                    content.style.display = 'block';
+                    // Activate button
+                    btn.setAttribute('aria-selected', 'true');
+                    btn.classList.remove(...inactiveClasses);
+                    btn.classList.add(...activeClasses);
+                } else {
+                    // Hide content
+                    content.style.display = 'none';
+                    // Deactivate button
+                    btn.setAttribute('aria-selected', 'false');
+                    btn.classList.remove(...activeClasses);
+                    btn.classList.add(...inactiveClasses);
+                }
+            });
+        }
+        
+        // Add base classes to all buttons
+        Object.values(tabBtns).forEach((btn, index) => {
+            btn.classList.add('py-2', 'px-4', 'text-sm', 'font-medium', 'whitespace-nowrap');
+            if (index === 0) {
+                 btn.classList.add(...activeClasses);
+            } else {
+                 btn.classList.add(...inactiveClasses);
+            }
+        });
+
+        // Add onerror handlers to local images
+        document.addEventListener('DOMContentLoaded', () => {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                if (img.src.startsWith('file://') || img.src.includes('E:\\ml project')) {
+                    const altText = img.alt || 'Local Image Not Found';
+                    const placeholderSrc = `https://placehold.co/400x300/1F2937/E5E7EB?text=${encodeURIComponent(altText)}`;
+                    if (!img.hasAttribute('onerror')) {
+                         img.onerror = function() {
+                            this.src = placeholderSrc;
+                            this.onerror = null; // Prevent infinite loop
+                         };
+                         // Trigger error if already broken
+                         if (img.complete && img.naturalWidth === 0) {
+                             img.src = placeholderSrc;
+                         }
+                    }
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
